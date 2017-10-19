@@ -1,0 +1,40 @@
+<root>
+	
+
+    <styles>
+        <include src="file://{resources}/styles/dotastyles.css" />
+        <include src="file://{resources}/styles/custom_game/ability_panel.css" />
+    </styles>
+
+    <scripts>
+        <include src="file://{resources}/scripts/custom_game/action_panel.js" />
+	</scripts>
+    
+	<Panel class="baseHud">
+		<Panel id="main">
+            <Panel id ="special_ability" class="ability_icon">
+                <Panel class="frame">
+                    <Button id="button_special_ability" class="button_ability" onactivate="CastSpecialAbility()">
+                        <DOTAAbilityImage id="AbilityImage" />
+                    </Button>
+                </Panel>
+            </Panel>
+
+            <Panel id ="blink_ability" class="ability_icon">
+                <Panel class="frame">
+                    <Button id="button_blink_ability" class="button_ability" onactivate="CastBlinkAbility()">
+                        <Image src="file://{images}/custom_game/blink.psd" />
+                    </Button>
+                </Panel>
+            </Panel>
+
+            <Panel id ="hit_ability" class="ability_icon">
+                <Panel class="frame">
+                    <Button id="button_hit_ability" class="button_ability" onactivate="CastHitAbility()">
+                        <Image src="file://{images}/custom_game/hit.psd" />
+                    </Button>
+                </Panel>
+            </Panel>
+        </Panel>
+	</Panel>
+</root>

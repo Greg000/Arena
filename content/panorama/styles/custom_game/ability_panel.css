@@ -1,0 +1,46 @@
+.baseHud{
+    width: 100%;
+    height: 100%;
+}
+
+#main{
+    height:120px;
+    width:400px;
+    background-image: url("file://{images}/custom_game/action_panel_bg.png");
+    background-size:100% 100%;
+    vertical-align: bottom;
+    horizontal-align:center; 
+}
+
+.ability_icon{
+    height: 75px;
+    width:75px;
+    vertical-align: center;
+    
+}
+.button_ability{
+    height: 64px;
+    width: 64px;
+    vertical-align: center;
+    horizontal-align:center;
+}
+
+
+#special_ability{
+    margin-left: 30px;
+}
+
+#blink_ability{
+    horizontal-align:center;
+}
+
+#hit_ability{
+    margin-left: 295px;
+}
+
+.frame{
+    background-image: url("file://{images}/custom_game/ability_icon_frame.png");
+    background-size: 100% 100%;
+    height:100%;
+    width:100%; 
+}

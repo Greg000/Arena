@@ -1,0 +1,9 @@
+<root>
+        <styles>
+                <include src="file://{resources}/styles/custom_game/custom_loading_screen.css"/>
+        </styles>
+        <Panel>
+                <Image id="background" class="background" src="file://{images}/custom_game/background.jpg"/>
+               
+        </Panel>
+</root>
