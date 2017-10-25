@@ -184,3 +184,171 @@ function Ice_Vortex_stop_sound(keys)
     StopSoundOn("Hero_Ancient_Apparition.IceVortex", caster)
 end
 
+function Global_Silence( keys )
+    local ability = keys.ability 
+    local caster = keys.caster
+    local targets = FindUnitsInRadius(caster:GetTeamNumber(), caster:GetAbsOrigin() , nil, 3000, DOTA_UNIT_TARGET_TEAM_ENEMY, ability:GetAbilityTargetType(), ability:GetAbilityTargetFlags(), 0, false)
+    for _,unit in pairs(targets) do
+        ability:ApplyDataDrivenModifier(caster, unit, "modifier_global_silence_target", {})
+    end
+
+    --effect
+    local silence = ParticleManager:CreateParticle("particles/units/heroes/hero_silencer/silencer_global_silence.vpcf", PATTACH_ABSORIGIN, caster)
+    ParticleManager:SetParticleControlEnt( silence, 1 , caster, PATTACH_POINT_FOLLOW, "attach_attack1", caster:GetOrigin(), true )
+
+end
+
+function Global_Silence_Destroy( keys )
+    local ability = keys.ability
+    local target = keys.target
+    targer:StopSound("Hero_Silencer.GlobalSilence.Effect")
+end
+
+function Teleport_Start( keys )
+    local caster = keys.caster
+    local point = keys.target_points[1]
+    local ability = keys.ability
+    ability.teleport_effect_end = ParticleManager:CreateParticle("particles/units/heroes/hero_furion/furion_teleport_end.vpcf", PATTACH_WORLDORIGIN, nil)
+    ability.teleport_effect_start = ParticleManager:CreateParticle("particles/units/heroes/hero_furion/furion_teleport.vpcf", PATTACH_ABSORIGIN, caster)
+    ParticleManager:SetParticleControl(ability.teleport_effect_end, 1, point)
+    
+end
+
+function Teleport_cast_success( keys )
+    local caster = keys.caster
+    local ability = keys.ability
+    ParticleManager:SetParticleControl(ability.teleport_effect_start, 2, Vector(50,0,0))
+    ParticleManager:SetParticleControl(ability.teleport_effect_end, 2, Vector(50,0,0))
+    ParticleManager:DestroyParticle(ability.teleport_effect_end, false)
+    ParticleManager:DestroyParticle(ability.teleport_effect_start,false)
+    caster:AddNoDraw()
+    caster:SetAbsOrigin(keys.target_points[1])
+    caster:RemoveNoDraw()
+end
+
+function Teleport_cast_failure( keys )
+    local caster = keys.caster
+    local ability = keys.ability
+    ParticleManager:SetParticleControl(ability.teleport_effect_start, 2, Vector(0,0,0))
+    ParticleManager:SetParticleControl(ability.teleport_effect_end, 2, Vector(0,0,0))
+    ParticleManager:DestroyParticle(ability.teleport_effect_end, false)
+    ParticleManager:DestroyParticle(ability.teleport_effect_start,false)
+end
+
+function Missile_cast( keys )
+    local caster = keys.caster
+    local ability = keys.ability
+    local target = keys.target
+    local player = caster:GetPlayerOwner()
+    local missile = CreateUnitByName("Missile", caster:GetAbsOrigin()+caster:GetForwardVector()*150, true, player, player, caster:GetTeamNumber()) 
+    ability.missile = missile
+    ability.target = keys.target
+    print(missile,"mis")
+    missile:StartGestureWithPlaybackRate(ACT_DOTA_SPAWN, 4/5)
+    Timers:CreateTimer(2.3,function()
+        ability:ApplyDataDrivenModifier(caster, missile, "modifier_missile_dummy", {})
+        --missile:StartGesture(ACT_DOTA_RUN)
+        
+        return nil
+    end)
+
+    --effect
+    local spark = ParticleManager:CreateParticle("particles/econ/items/gyrocopter/hero_gyrocopter_gyrotechnics/gyro_guided_missile.vpcf", PATTACH_ABSORIGIN,missile)
+    ParticleManager:SetParticleControlEnt( spark, 0 , missile, PATTACH_POINT_FOLLOW, "attach_fuse", missile:GetOrigin(), true )
+
+end
+
+function Missile_Check( keys )
+    local ability = keys.ability
+    local missile = ability.missile
+    local caster = keys.caster
+    local target = ability.target 
+    
+    if not missile:IsNull() then
+        missile:SetForwardVector(target:GetAbsOrigin() - missile:GetAbsOrigin())
+        missile:SetAbsOrigin(missile:GetAbsOrigin() + missile:GetForwardVector():Normalized()* 10)
+        if (target:GetAbsOrigin() - missile:GetAbsOrigin()):Length2D() < 30 then
+            local explo = ParticleManager:CreateParticle("particles/econ/items/gyrocopter/hero_gyrocopter_gyrotechnics/gyro_guided_missile_explosion.vpcf",PATTACH_WORLDORIGIN,nil)
+            ParticleManager:SetParticleControl(explo, 0, missile:GetAbsOrigin())
+            ability:ApplyDataDrivenModifier(caster, target, "modifier_missile_stun", {})
+            local damageTable = {victim=target,
+                        attacker=caster,
+                        damage=100,    
+                        damage_type=DAMAGE_TYPE_MAGICAL} 
+            ApplyDamage(damageTable)
+            EmitSoundOn("Hero_Gyrocopter.HomingMissile.Target", target)
+            EmitSoundOn("Hero_Gyrocopter.HomingMissile.Destroy", target)
+            StopSoundOn("Hero_Gyrocopter.HomingMissile.Enemy", caster)
+            missile:RemoveModifierByName("modifier_missile_dummy")
+            missile:RemoveSelf()
+        end
+    end 
+end
+
+function Sacred_Arrow( keys )
+    local caster = keys.caster
+    local point = keys.target_points[1]
+    local ability = keys.ability
+    ability.start_point = caster:GetAbsOrigin()
+    local projectile_table = {
+		Ability = keys.ability,
+		Source = keys.caster,
+		EffectName = "particles/units/heroes/hero_mirana/mirana_spell_arrow.vpcf",
+		vSpawnOrigin = keys.caster:GetAbsOrigin(),
+		vVelocity = (point-caster:GetAbsOrigin()):Normalized()*800,
+		fDistance = 2000,
+		fStartRadius = 50, --divide by 2?
+		fEndRadius = 50, --divide by 2?
+		bHasFrontalCone = false,
+		iUnitTargetTeam = DOTA_UNIT_TARGET_TEAM_ENEMY,
+		iUnitTargetType = DOTA_UNIT_TARGET_ALL,
+		bProvidesVision = false,
+	}
+	ProjectileManager:CreateLinearProjectile(projectile_table)
+
+end
+
+
+function Sacred_Arrow_stun( keys )
+    local point = keys.ability.start_point
+    local caster = keys.caster
+    local ability = keys.ability
+    local target = keys.target
+    local fly_distance = (point - target:GetAbsOrigin()):Length2D()
+    local duration = fly_distance/2000 * 5
+    target:AddNewModifier(caster, ability, "modifier_stunned", {duration = duration})
+end
+
+function Blink( keys )
+    local caster = keys.caster
+    local point = keys.target_points[1]
+    if (point-caster:GetAbsOrigin()):Length2D() > 1050 then
+        point = caster:GetAbsOrigin() + (point-caster:GetAbsOrigin()):Normalized() * 1050
+    end
+
+    local blink = ParticleManager:CreateParticle("particles/units/heroes/hero_antimage/antimage_blink_start.vpcf", PATTACH_ABSORIGIN, caster)
+    ParticleManager:SetParticleControlForward(blink, 0, caster:GetForwardVector())
+
+    caster:SetAbsOrigin(point)
+
+    local blink = ParticleManager:CreateParticle("particles/units/heroes/hero_antimage/antimage_blink_end.vpcf", PATTACH_ABSORIGIN, caster)
+    ParticleManager:SetParticleControlForward(blink, 0, point)
+end
+
+function X_Mark( keys )
+    local ability = keys.ability
+    local caster = keys.caster
+    local target = keys.target
+    ability.original_point = target:GetAbsOrigin()
+    --local mark = ParticleManager:CreateParticle("particles/econ/items/kunkka/divine_anchor/hero_kunkka_dafx_skills/kunkka_spell_x_spot_fxset.vpcf", PATTACH_ABSORIGIN_FOLLOW, target)
+    --target.x_mark = mark
+    ability:ApplyDataDrivenModifier(caster, target, "modifier_x_mark", {})
+end
+
+function X_Mark_return( keys )
+    local ability = keys.ability
+    local original_point = ability.original_point
+    local target = keys.target
+    target:SetAbsOrigin(original_point)
+    target:StopSound("Ability.XMark.Target_Movement")
+end

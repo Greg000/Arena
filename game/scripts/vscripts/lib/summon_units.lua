@@ -23,7 +23,8 @@ function SummonUnits:SpawnUnits()
     local dire_player = PlayerResource:GetPlayer(1)
     if radiant_player ~= nil then 
         for _,entity in pairs(self.radiant_spawn_entities) do
-            local creep = CreateUnitByName("npc_arena_unit_ancient_apparition",entity:GetAbsOrigin(),true, radiant_player,radiant_player,DOTA_TEAM_GOODGUYS)
+            local creep = CreateUnitByName("npc_arena_unit_kunkka",entity:GetAbsOrigin(),true, radiant_player,radiant_player,DOTA_TEAM_GOODGUYS)
+            print(creep)
             creep:SetControllableByPlayer(radiant_player_id, false)
 			creep:SetForwardVector(Vector(1,0,0))
         end

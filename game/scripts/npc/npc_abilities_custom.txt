@@ -225,9 +225,7 @@
 				{
 					"MODIFIER_PROPERTY_MOVESPEED_ABSOLUTE"	"0.1"
 				}
-				"States"
-				{
-				}
+				"States"	{}
 			}
 		}
 	}
@@ -389,6 +387,294 @@
 					"MODIFIER_PROPERTY_MOVESPEED_BONUS_UNIQUE"	"-90"
 				}
 				"IsDebuff"	"1"
+			}
+		}
+	}
+
+	"Global Silence"
+	{
+		"BaseClass"	"ability_datadriven"
+		"AbilityTextureName"	"silencer_global_silence"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+		"AbilityUnitTargetType"	"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+		"AbilityUnitTargetTeam"	"DOTA_UNIT_TARGET_TEAM_ENEMY"
+		"precache"
+		{
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_silencer.vsndevts"
+			"particle"	"particles\generic_gameplay\generic_silenced.vpcf"
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_silencer.vsndevts"
+		}
+		"OnSpellStart"
+		{
+			"RunScript"
+			{
+				"ScriptFile"	"scripts/vscripts/abilities.lua"
+				"Function"	"Global_Silence"
+			}
+			"FireSound"
+			{
+				"Target"	"CASTER"
+				"EffectName"	"Hero_Silencer.GlobalSilence.Cast"
+			}
+		}
+		"Modifiers"
+		{
+			"modifier_global_silence_target"
+			{
+				"States"
+				{
+					"MODIFIER_STATE_SILENCED"	"MODIFIER_STATE_VALUE_ENABLED"
+				}
+				"Duration"	"4"
+				"IsDebuff"	"1"
+				"EffectName"	"particles\generic_gameplay\generic_silenced.vpcf"
+				"EffectAttachType"	"follow_overhead"
+				"OnCreated"
+				{
+					"FireSound"
+					{
+						"Target"	"TARGET"
+						"EffectName"	"Hero_Silencer.GlobalSilence.Effect"
+					}
+				}
+				"OnDestroy"
+				{
+					"RunScript"
+					{
+						"Target"	"TARGET"
+						"ScriptFile"	"scripts/vscripts/abilities.lua"
+						"Function"	"Global_Silence_Destroy"
+					}
+				}
+			}
+		}
+	}
+
+	"Teleport"
+	{
+		"BaseClass"	"ability_datadriven"
+		"AbilityTextureName"	"furion_teleportation"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_CHANNELLED"
+		"AbilityUnitTargetType"	"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+		"AbilityUnitTargetTeam"	"DOTA_UNIT_TARGET_TEAM_ENEMY"
+		"AbilityCastAnimation"	"ACT_DOTA_CAST_ABILITY_2"
+		"AbilityChannelTime"	"3"
+		"OnChannelSucceeded"
+		{
+			"RunScript"
+			{
+				"Target"	"POINT"
+				"ScriptFile"	"scripts/vscripts/abilities.lua"
+				"Function"	"Teleport_cast_success"
+			}
+		}
+		"OnSpellStart"
+		{
+			"RunScript"
+			{
+				"Target"	"POINT"
+				"ScriptFile"	"scripts/vscripts/abilities.lua"
+				"Function"	"Teleport_Start"
+			}
+		}
+		"OnChannelInterrupted"
+		{
+			"RunScript"
+			{
+				"Target"	"POINT"
+				"ScriptFile"	"scripts/vscripts/abilities.lua"
+				"Function"	"Teleport_cast_failure"
+			}
+		}
+	}
+
+	"Missile"
+	{
+		"BaseClass"	"ability_datadriven"
+		"AbilityTextureName"	"gyrocopter_homing_missile"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
+		"AbilityUnitTargetType"	"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+		"AbilityUnitTargetTeam"	"DOTA_UNIT_TARGET_TEAM_ENEMY"
+		"precache"
+		{
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_gyrocopter.vsndevts"
+		}
+		"OnSpellStart"
+		{
+			"RunScript"
+			{
+				"Target"	"TARGET"
+				"ScriptFile"	"scripts/vscripts/abilities.lua"
+				"Function"	"Missile_cast"
+			}
+			"FireSound"
+			{
+				"Target"	"CASTER"
+				"EffectName"	"Hero_Gyrocopter.HomingMissile.Enemy"
+			}
+		}
+		"Modifiers"
+		{
+			"modifier_missile_dummy"
+			{
+				"OnIntervalThink"
+				{
+					"RunScript"
+					{
+						"Target"	"TARGET"
+						"ScriptFile"	"scripts/vscripts/abilities.lua"
+						"Function"	"Missile_Check"
+					}
+				}
+				"ThinkInterval"	"0.03"
+				"States"
+				{
+					"MODIFIER_STATE_NO_UNIT_COLLISION"	"MODIFIER_STATE_VALUE_ENABLED"
+				}
+			}
+			"modifier_missile_stun"
+			{
+				"States"
+				{
+					"MODIFIER_STATE_STUNNED"	"MODIFIER_STATE_VALUE_ENABLED"
+				}
+				"Duration"	"3"
+			}
+		}
+	}
+
+	"Sacred Arrow"
+	{
+		"BaseClass"	"ability_datadriven"
+		"AbilityTextureName"	"mirana_arrow"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_POINT"
+		"AbilityUnitTargetType"	"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+		"AbilityUnitTargetTeam"	"DOTA_UNIT_TARGET_TEAM_ENEMY"
+		"precache"
+		{
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_mirana.vsndevts"
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_mirana.vsndevts"
+		}
+		"OnSpellStart"
+		{
+			"RunScript"
+			{
+				"Target"	"POINT"
+				"ScriptFile"	"scripts/vscripts/abilities.lua"
+				"Function"	"Sacred_Arrow"
+			}
+			"FireSound"
+			{
+				"Target"	"CASTER"
+				"EffectName"	"Hero_Mirana.ArrowCast"
+			}
+		}
+		"OnProjectileHitUnit"
+		{
+			"DeleteOnHit"	"1"
+			"FireSound"
+			{
+				"Target"	"TARGET"
+				"EffectName"	"Hero_Mirana.ArrowImpact"
+			}
+			"RunScript"
+			{
+				"Target"	"TARGET"
+				"ScriptFile"	"scripts/vscripts/abilities.lua"
+				"Function"	"Sacred_Arrow_stun"
+			}
+		}
+	}
+
+	"Blink"
+	{
+		"BaseClass"	"ability_datadriven"
+		"AbilityTextureName"	"antimage_blink"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_POINT"
+		"AbilityUnitTargetType"	"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+		"AbilityUnitTargetTeam"	"DOTA_UNIT_TARGET_TEAM_ENEMY"
+		"AbilityCastPoint"	"0.4"
+		"AbilityCastAnimation"	"ACT_DOTA_CAST_ABILITY_2"
+		"precache"
+		{
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_antimage.vsndevts"
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_antimage.vsndevts"
+		}
+		"OnSpellStart"
+		{
+			"FireSound"
+			{
+				"Target"	"CASTER"
+				"EffectName"	"Hero_Antimage.Blink_out"
+			}
+			"RunScript"
+			{
+				"Target"	"POINT"
+				"ScriptFile"	"scripts/vscripts/abilities.lua"
+				"Function"	"Blink"
+			}
+			"FireSound"
+			{
+				"Target"	"POINT"
+				"EffectName"	"Hero_Antimage.Blink_in"
+			}
+		}
+	}
+
+	"X_mark"
+	{
+		"BaseClass"	"ability_datadriven"
+		"AbilityTextureName"	"kunkka_x_marks_the_spot"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
+		"AbilityUnitTargetType"	"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+		"AbilityUnitTargetTeam"	"DOTA_UNIT_TARGET_TEAM_BOTH"
+		"precache"
+		{
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_kunkka.vsndevts"
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_kunkka.vsndevts"
+			"particle"	"particles\econ\items\kunkka\divine_anchor\hero_kunkka_dafx_skills\kunkka_spell_x_spot_fxset.vpcf"
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_kunkka.vsndevts"
+		}
+		"OnSpellStart"
+		{
+			"RunScript"
+			{
+				"Target"	"TARGET"
+				"ScriptFile"	"scripts/vscripts/abilities.lua"
+				"Function"	"X_Mark"
+			}
+			"FireSound"
+			{
+				"Target"	"TARGET"
+				"EffectName"	"Ability.XMarksTheSpot.Target"
+			}
+			"FireSound"
+			{
+				"Target"	"TARGET"
+				"EffectName"	"Ability.XMark.Target_Movement"
+			}
+		}
+		"Modifiers"
+		{
+			"modifier_x_mark"
+			{
+				"OnDestroy"
+				{
+					"RunScript"
+					{
+						"Target"	"TARGET"
+						"ScriptFile"	"scripts/vscripts/abilities.lua"
+						"Function"	"X_Mark_return"
+					}
+					"FireSound"
+					{
+						"Target"	"TARGET"
+						"EffectName"	"Ability.XMarksTheSpot.Return"
+					}
+				}
+				"Duration"	"4"
+				"EffectName"	"particles\econ\items\kunkka\divine_anchor\hero_kunkka_dafx_skills\kunkka_spell_x_spot_fxset.vpcf"
+				"EffectAttachType"	"attach_origin"
 			}
 		}
 	}

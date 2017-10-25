@@ -5,6 +5,30 @@
 {
 	"Version"		"1"
 
+	"Missile"
+	{
+		"BaseClass"	"npc_dota_creature"
+		"Ability1"	""
+		"Ability2"	""
+		"Ability3"	""
+		"Ability4"	""
+		"Ability5"	""
+		"Ability6"	""
+		"Ability7"	""
+		"Ability8"	""
+		"Ability9"	""
+		"Ability10"	""
+		"Ability11"	""
+		"Ability12"	""
+		"Ability13"	""
+		"Ability14"	""
+		"Ability15"	""
+		"Ability16"	""
+		"Model"	"models\items\gyrocopter\skyhigh_bomb_missle\skyhigh_bomb.vmdl"
+		"MovementCapabilities"	"DOTA_UNIT_CAP_MOVE_GROUND"
+		"MovementSpeed"	"300"
+	}
+
 	"dummy_aa_slow"
 	{
 		"BaseClass"	"npc_dota_creature"
@@ -289,8 +313,8 @@
 	"npc_arena_unit_silencer"
 	{
 		"BaseClass"	"npc_dota_creature"
-		"Ability1"	""
-		"Ability2"	""
+		"Ability1"	"Global Silence"
+		"Ability2"	"TestUnit"
 		"Ability3"	""
 		"Ability4"	""
 		"Ability5"	""
@@ -318,7 +342,7 @@
 	"npc_arena_unit_furion"
 	{
 		"BaseClass"	"npc_dota_creature"
-		"Ability1"	""
+		"Ability1"	"Teleport"
 		"Ability2"	""
 		"Ability3"	""
 		"Ability4"	""
@@ -347,8 +371,8 @@
 	"npc_arena_unit_gyrocopter"
 	{
 		"BaseClass"	"npc_dota_creature"
-		"Ability1"	""
-		"Ability2"	""
+		"Ability1"	"Missile"
+		"Ability2"	"TestUnit"
 		"Ability3"	""
 		"Ability4"	""
 		"Ability5"	""
@@ -376,8 +400,8 @@
 	"npc_arena_unit_mirana"
 	{
 		"BaseClass"	"npc_dota_creature"
-		"Ability1"	""
-		"Ability2"	""
+		"Ability1"	"Sacred Arrow"
+		"Ability2"	"TestUnit"
 		"Ability3"	""
 		"Ability4"	""
 		"Ability5"	""
@@ -405,7 +429,7 @@
 	"npc_arena_unit_anti_mage"
 	{
 		"BaseClass"	"npc_dota_creature"
-		"Ability1"	""
+		"Ability1"	"Blink"
 		"Ability2"	""
 		"Ability3"	""
 		"Ability4"	""
@@ -434,7 +458,7 @@
 	"npc_arena_unit_kunkka"
 	{
 		"BaseClass"	"npc_dota_creature"
-		"Ability1"	""
+		"Ability1"	"X_mark"
 		"Ability2"	""
 		"Ability3"	""
 		"Ability4"	""
